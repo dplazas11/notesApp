@@ -2,9 +2,16 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Notas</title>
+    <title> Pagina inicio </title>
 </head>
 <body>
-    <h1>Muy pronto esto sera una pagina web</h1>
+    <h1> Información primera nota</h1>
+    <ul>
+        <li><strong>Titulo:</strong><span th:text = "${nota1.Titulo}"></span></li>
+        <li><strong>Fecha:</strong><span th:text = "${nota1.Fecha}"></span></li>
+        <li><strong>Descripcion:</strong><span th:text = "${nota1.Descripcion}"></span></li>
+        <li><strong>Contenido:</strong><span th:text = "${nota1.Contenido}"></span></li>        
+        
+    </ul>
 </body>
 </html>                                                                      
