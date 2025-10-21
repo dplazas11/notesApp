@@ -1,17 +1,177 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title> Pagina inicio </title>
-</head>
-<body>
-    <h1> Información primera nota</h1>
-    <ul>
-        <li><strong>Titulo:</strong><span th:text = "${nota1.Titulo}"></span></li>
-        <li><strong>Fecha:</strong><span th:text = "${nota1.Fecha}"></span></li>
-        <li><strong>Descripcion:</strong><span th:text = "${nota1.Descripcion}"></span></li>
-        <li><strong>Contenido:</strong><span th:text = "${nota1.Contenido}"></span></li>        
-        
-    </ul>
-</body>
-</html>                                                                      
+    <head>
+        <meta charset="UTF-8">
+        <title>Gestión de Notas</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                background-color: #e6f2ff;
+                margin: 0;
+                padding: 0;
+                display: flex;
+            }
+
+            /* Menú lateral */
+            .sidebar {
+                width: 220px;
+                background-color: #007acc;
+                height: 100vh;
+                padding-top: 20px;
+                position: fixed;
+                top: 0;
+                left: 0;
+                color: white;
+            }
+
+            .sidebar h2 {
+                text-align: center;
+                color: white;
+                margin-bottom: 30px;
+            }
+
+            .sidebar a {
+                display: block;
+                color: white;
+                padding: 15px 25px;
+                text-decoration: none;
+                font-weight: bold;
+                transition: background-color 0.3s;
+            }
+
+            .sidebar a:hover {
+                background-color: #005b99;
+            }
+
+            /* Contenido principal */
+            .main-content {
+                margin-left: 240px;
+                width: calc(100% - 240px);
+                padding: 30px;
+            }
+
+            .container {
+                background-color: #ffffff;
+                border-radius: 12px;
+                padding: 30px;
+                box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
+            }
+
+            h1 {
+                text-align: center;
+                color: #007acc;
+            }
+
+            label {
+                display: block;
+                margin-top: 15px;
+                font-weight: bold;
+                color: #005b99;
+            }
+
+            input[type="text"],
+            textarea,
+            input[type="date"] {
+                width: 100%;
+                padding: 10px;
+                margin-top: 5px;
+                border: 1px solid #b3d1ff;
+                border-radius: 8px;
+                box-sizing: border-box;
+            }
+
+            textarea {
+                resize: vertical;
+                height: 100px;
+            }
+
+            .buttons {
+                margin-top: 25px;
+                text-align: center;
+            }
+
+            button {
+                background-color: #4da6ff;
+                color: white;
+                border: none;
+                padding: 10px 18px;
+                margin: 5px;
+                border-radius: 8px;
+                cursor: pointer;
+                font-weight: bold;
+            }
+
+            button:hover {
+                background-color: #007acc;
+            }
+
+            .mensaje {
+                color: green;
+                text-align: center;
+                font-weight: bold;
+                margin-top: 10px;
+                animation: desaparecer 4s ease-in-out forwards;
+            }
+
+            @keyframes desaparecer {
+                0% {
+                    opacity: 1;
+                }
+                80% {
+                    opacity: 1;
+                }
+                100% {
+                    opacity: 0;
+                    visibility: hidden;
+                }
+            }
+        </style>
+    </head>
+    <body>
+
+        <!-- Menú lateral -->
+        <div class="sidebar">
+            <h2>MENU</h2>
+            <a th:href="@{/}">📝 Crear Nota</a>
+            <a th:href="@{/listar}">📋 Ver Notas</a>
+        </div>
+
+        <!-- Contenido principal -->
+        <div class="main-content">
+            <div class="container">
+                <h1>Crear Nota</h1>
+
+                <form th:action="@{/}" th:object="${nota}" method="post">
+                    <label for="titulo">Título:</label>
+                    <input type="text" id="titulo" th:field="*{titulo}" placeholder="Escribe el título" required>
+
+                    <label for="descripcion">Descripción:</label>
+                    <textarea id="descripcion" th:field="*{descripcion}" placeholder="Escribe una descripción"></textarea>
+
+                    <label for="contenido">Contenido:</label>
+                    <textarea id="contenido" th:field="*{contenido}" placeholder="Escribe el contenido de la nota"></textarea>
+
+                    <label for="fecha">Fecha:</label>
+                    <input type="date" id="fecha" th:field="*{fecha}" readonly>
+
+                    <div class="buttons">
+                        <button type="submit" formaction="/">Guardar</button>
+                        
+                    </div>
+                </form>
+
+                <p th:text="${mensaje}" class="mensaje"></p>
+            </div>
+        </div>
+
+        <script>
+            // Coloca la fecha actual automáticamente
+            document.addEventListener("DOMContentLoaded", function () {
+                const fechaInput = document.getElementById("fecha");
+                const hoy = new Date().toISOString().split('T')[0];
+                fechaInput.value = hoy;
+            });
+        </script>
+
+    </body>
+</html>

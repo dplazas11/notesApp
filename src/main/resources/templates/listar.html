@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <title>Listar Notas</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                display: flex;
+                margin: 0;
+                background-color: #f0f8ff;
+            }
+
+            /* Menú lateral (idéntico al de crear nota) */
+            nav {
+                width: 220px;
+                background-color: #007acc;
+                height: 100vh;
+                padding-top: 20px;
+                position: fixed;
+                top: 0;
+                left: 0;
+                color: white;
+            }
+
+            nav h2 {
+                text-align: center;
+                color: white;
+                margin-bottom: 30px;
+            }
+
+            nav a {
+                display: block;
+                color: white;
+                padding: 15px 25px;
+                text-decoration: none;
+                font-weight: bold;
+                transition: background-color 0.3s;
+            }
+
+            nav a:hover {
+                background-color: #005b99;
+            }
+
+
+            /* Contenedor principal */
+            .main {
+                margin-left: 240px;
+                width: calc(100% - 240px);
+                padding: 30px;
+            }
+
+            h1 {
+                color: #007acc;
+                text-align: center;
+            }
+
+            /* Tabla de notas */
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-top: 20px;
+                background-color: white;
+                border-radius: 12px;
+                overflow: hidden;
+                box-shadow: 0 0 10px rgba(0,0,0,0.2);
+            }
+
+            th, td {
+                border-bottom: 1px solid #cce6ff;
+                text-align: center;
+                margin-left: 340px; /* deja espacio para el menú */
+                padding: 12px;
+            }
+
+            th {
+                background-color: #b3e0ff;
+                color: #004466;
+            }
+
+            tr:hover {
+                background-color: #e6f7ff;
+            }
+
+            .acciones a {
+                margin-right: 10px;
+                color: #007acc;
+                text-decoration: none;
+                font-weight: bold;
+            }
+
+            .acciones a:hover {
+                text-decoration: underline;
+            }
+        </style>
+    </head>
+    <body>
+
+        <!-- Menú lateral igual al de crear nota -->
+        <nav>
+            <h2>MENU</h2>
+            <a th:href="@{/}">📝 Crear Nota</a>
+            <a th:href="@{/listar}">📋 Listar Notas</a>
+        </nav>
+
+        <div class="main">
+            <h1>Listado de Notas</h1>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Título</th>
+                        <th>Descripción</th>
+                        <th>Contenido</th>
+                        <th>Fecha</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="nota : ${notas}">
+                        <td th:text="${nota.notasid}"></td>
+                        <td th:text="${nota.titulo}"></td>
+                        <td th:text="${nota.descripcion}"></td>
+                        <td th:text="${nota.contenido}"></td>
+                        <td th:text="${nota.fecha}"></td>
+                        <td class="acciones">
+                            <a th:href="@{'/ver/' + ${nota.notasid}}">Ver</a>
+                            <a th:href="@{'/editar/' + ${nota.notasid}}">Editar</a>
+                            <a th:href="@{'/eliminar/' + ${nota.notasid}}" onclick="return confirm('¿Deseas eliminar esta nota?')">Eliminar</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </body>
+</html>

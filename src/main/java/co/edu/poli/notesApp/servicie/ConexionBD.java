@@ -1,5 +1,5 @@
 
-package co.edu.poli.notesApp.servicio;
+package co.edu.poli.notesApp.servicie;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

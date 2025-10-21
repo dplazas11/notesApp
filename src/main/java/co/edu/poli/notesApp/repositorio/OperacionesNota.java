@@ -5,7 +5,7 @@
 package co.edu.poli.notesApp.repositorio;
 
 import co.edu.poli.notesApp.modelo.Nota;
-import co.edu.poli.notesApp.servicio.ConexionBD;
+import co.edu.poli.notesApp.servicie.ConexionBD;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,8 +20,8 @@ public class OperacionesNota implements Operacion<Nota> {
             ps.setString(1, nota.getTitulo());
             ps.setString(2, nota.getDescripcion());
             ps.setString(3, nota.getContenido());
-            ps.setDate(4, Date.valueOf(nota.getFecha()));
-            ps.setString(5, nota.getId());
+            ps.setDate(4, (Date) nota.getFecha());
+            ps.setLong(5, nota.getNotasid());
 
             ps.executeUpdate();
             return "Nota creada correctamente.";
@@ -55,8 +55,8 @@ public class OperacionesNota implements Operacion<Nota> {
             ps.setString(1, nota.getTitulo());
             ps.setString(2, nota.getDescripcion());
             ps.setString(3, nota.getContenido());
-            ps.setDate(4, Date.valueOf(nota.getFecha()));
-            ps.setString(5, nota.getId());
+            ps.setDate(4, (Date) nota.getFecha());
+            ps.setLong(5, nota.getNotasid());
 
             ps.executeUpdate();
             return "Se ha actualizado la nota correctamente.";
@@ -80,8 +80,8 @@ public class OperacionesNota implements Operacion<Nota> {
                 ResultSet rs = pstmt.executeQuery();
 
                 if (rs.next()) {
-                    String id = rs.getString("notaid");
-                    String fecha = rs.getString("fecha");
+                    Long id = rs.getLong("notaid");
+                    Date fecha = rs.getDate("fecha");
                     String titulo = rs.getString("titulo");
                     String descripcion = rs.getString("descripcion");
                     String contenido = rs.getString("contenido");
@@ -107,8 +107,8 @@ public class OperacionesNota implements Operacion<Nota> {
         try (Connection conn = ConexionBD.getInstance().getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql); ResultSet rs = pstmt.executeQuery()) {
 
             while (rs.next()) {
-                String Notasid = rs.getString("notasid");
-                String fecha_creacion = rs.getString("fecha_creacion");
+                Long Notasid = rs.getLong("notasid");
+                Date fecha_creacion = rs.getDate("fecha_creacion");
                 String titulo = rs.getString("titular");
                 String descripcion = rs.getString("pais");
                 String contenido = rs.getString("mision");
