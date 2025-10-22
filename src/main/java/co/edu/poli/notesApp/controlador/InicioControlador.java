@@ -15,7 +15,7 @@ public class InicioControlador {
     @Autowired
     private NotasOperaciones notaRepository;
 
-    @GetMapping("/")
+    @GetMapping("/inicio")
     public String inicio(Model model) {
         model.addAttribute("nota", new Nota());
         return "inicio";
@@ -29,7 +29,7 @@ public class InicioControlador {
         return "listar"; // nombre del archivo HTML (listar.html)
     }
 
-    @PostMapping("/")
+    @PostMapping("/inicio")
     public String guardarNota(@ModelAttribute("nota") Nota nota, Model model) {
         try {
             notaRepository.save(nota);
@@ -53,24 +53,37 @@ public class InicioControlador {
             model.addAttribute("error", "⚠️ No se encontró una nota con ese ID");
         }
         model.addAttribute("nota", new Nota());
-        return "inicio";
+        return "verNota";
     }
 
-    // 🔴 Eliminar nota
-    @PostMapping("/eliminar")
-    public String eliminarNota(@ModelAttribute("nota") Nota nota, Model model) {
-        if (nota.getNotasid() == null) {
-            model.addAttribute("error", "❌ Debes ingresar un ID para eliminar");
-        } else if (notaRepository.existsById(nota.getNotasid())) {
-            notaRepository.deleteById(nota.getNotasid());
-            model.addAttribute("mensaje", "🗑️ Nota eliminada correctamente");
+    // 🔴 Eliminar nota con AJAX
+    @DeleteMapping("/eliminar/{id}")
+    @ResponseBody
+    public String eliminarNota(@PathVariable Long id) {
+        if (notaRepository.existsById(id)) {
+            notaRepository.deleteById(id);
+            return "✅ Nota eliminada correctamente";
         } else {
-            model.addAttribute("error", "⚠️ No se encontró una nota con ese ID");
+            return "⚠️ No se encontró una nota con ese ID";
         }
-        model.addAttribute("nota", new Nota());
-        return "inicio";
     }
 
+    // 🟣 Ver una nota por su ID
+    @GetMapping("/verNota/{id}")
+    public String verNota(@PathVariable Long id, Model model) {
+        Optional<Nota> notaEncontrada = notaRepository.findById(id);
+
+        if (notaEncontrada.isPresent()) {
+            model.addAttribute("nota", notaEncontrada.get());
+        } else {
+            model.addAttribute("nota", new Nota());
+            model.addAttribute("error", "⚠️ No se encontró la nota solicitada");
+        }
+
+        return "verNota"; // archivo HTML: ver.html
+    }
+    
+    /*
     // 🔍 Buscar nota por ID
     @PostMapping("/buscar")
     public String buscarNota(@ModelAttribute("nota") Nota nota, Model model) {
@@ -88,5 +101,6 @@ public class InicioControlador {
         }
         return "inicio";
     }
+*/
 
 }

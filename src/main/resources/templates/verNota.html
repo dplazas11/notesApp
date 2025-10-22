@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
     <head>
         <meta charset="UTF-8">
-        <title>Gestión de Notas</title>
+        <title>Ver Nota</title>
         <style>
             body {
                 font-family: Arial, sans-serif;
@@ -12,7 +12,6 @@
                 display: flex;
             }
 
-            /* Menú lateral */
             .sidebar {
                 width: 220px;
                 background-color: #007acc;
@@ -43,7 +42,6 @@
                 background-color: #005b99;
             }
 
-            /* Contenido principal */
             .main-content {
                 margin-left: 240px;
                 width: calc(100% - 240px);
@@ -80,11 +78,6 @@
                 box-sizing: border-box;
             }
 
-            textarea {
-                resize: vertical;
-                height: 100px;
-            }
-
             .buttons {
                 margin-top: 25px;
                 text-align: center;
@@ -106,76 +99,88 @@
             }
 
             .mensaje {
-                color: green;
                 text-align: center;
-                font-weight: bold;
                 margin-top: 10px;
-                animation: desaparecer 4s ease-in-out forwards;
-            }
-
-            @keyframes desaparecer {
-                0% {
-                    opacity: 1;
-                }
-                80% {
-                    opacity: 1;
-                }
-                100% {
-                    opacity: 0;
-                    visibility: hidden;
-                }
+                font-weight: bold;
             }
         </style>
     </head>
     <body>
-
-        <!-- Menú lateral -->
         <div class="sidebar">
             <h2>MENU</h2>
-            <a th:href="@{/inicio}">📝 Crear Nota</a>
-            <a th:href="@{/listar}">📋 Ver Notas</a>
+            <a href="/inicio">📝 Crear Nota</a>
+            <a href="/listar">📋 Ver Notas</a>
         </div>
 
-        <!-- Contenido principal -->
         <div class="main-content">
             <div class="container">
-                <h1>Crear Nota</h1>
+                <h1>Ver / Editar Nota</h1>
 
-                <form th:action="@{/inicio}" th:object="${nota}" method="post">
+                <form th:action="@{/actualizar}" th:object="${nota}" method="post">
+                    <input type="hidden" th:field="*{notasid}">
+
                     <label for="titulo">Título:</label>
-                    <input type="text" id="titulo" th:field="*{titulo}" placeholder="Escribe el título" required>
+                    <input type="text" id="titulo" th:field="*{titulo}" >
 
                     <label for="descripcion">Descripción:</label>
-                    <textarea id="descripcion" th:field="*{descripcion}" placeholder="Escribe una descripción"></textarea>
+                    <textarea id="descripcion" th:field="*{descripcion}"></textarea>
 
                     <label for="contenido">Contenido:</label>
-                    <textarea id="contenido" th:field="*{contenido}" placeholder="Escribe el contenido de la nota"></textarea>
+                    <textarea id="contenido" th:field="*{contenido}" ></textarea>
 
                     <label for="fecha">Fecha:</label>
-                    <input type="date" id="fecha" th:field="*{fecha}" readonly>
+                    <input type="date" id="fecha" th:field="*{fecha}" >
 
                     <div class="buttons">
-                        <button type="submit" formaction="/">Guardar</button>
-
+                        <button type="button" onclick="volverAListaNotas()">Atras</button>
+                        <button type="button"
+                                th:attr="data-id=${nota.notasid}"
+                                onclick="eliminarNota(this.getAttribute('data-id'))">
+                            Eliminar
+                        </button>
+                        <button type="submit" id="btnGuardar" disabled>Guardar Cambios</button>                        
                     </div>
                 </form>
 
-                <p th:text="${mensaje}" class="mensaje"></p>
+                <div id="mensaje" class="mensaje" th:text="${mensaje}"></div>
+                <div class="mensaje" style="color:red;" th:text="${error}"></div>
             </div>
         </div>
 
         <script>
-            // Coloca la fecha actual automáticamente
-            document.addEventListener("DOMContentLoaded", function () {
-                const fechaInput = document.getElementById("fecha");
-                const hoy = new Date();
-                const yyyy = hoy.getFullYear();
-                const mm = String(hoy.getMonth() + 1).padStart(2, '0');
-                const dd = String(hoy.getDate()).padStart(2, '0');
-                fechaInput.value = `${yyyy}-${mm}-${dd}`;
-            });
+            function volverAListaNotas() {
+                window.location.href = "/listar";
+            }
 
+            function eliminarNota(id) {
+                if (!confirm("¿Deseas eliminar esta nota?"))
+                    return;
+
+                fetch(`/eliminar/${id}`, {method: "DELETE"})
+                        .then(response => {
+                            if (!response.ok)
+                                throw new Error("Error HTTP: " + response.status);
+                            return response.text();
+                        })
+                        .then(texto => {
+                            mostrarMensaje(texto, true);
+                            setTimeout(() => 
+                                // Redirige a la página /listar después de eliminar
+                                 window.location.href = "/listar", 800);
+                        })
+                        .catch(error => {
+                            mostrarMensaje("❌ Error al eliminar la nota", false);
+                            console.error(error);
+                        });
+            }
+
+            function mostrarMensaje(texto, exito) {
+                const mensajeDiv = document.getElementById("mensaje");
+                mensajeDiv.style.display = "block";
+                mensajeDiv.style.backgroundColor = exito ? "#d4edda" : "#f8d7da";
+                mensajeDiv.style.color = exito ? "#155724" : "#721c24";
+                mensajeDiv.textContent = texto;
+            }
         </script>
-
     </body>
 </html>
