@@ -141,7 +141,7 @@
             <div class="container">
                 <h1>Crear Nota</h1>
 
-                <form th:action="@{/inicio}" th:object="${nota}" method="post">
+                <form th:action="@{/guardar}" th:object="${nota}" method="post">
                     <label for="titulo">Título:</label>
                     <input type="text" id="titulo" th:field="*{titulo}" placeholder="Escribe el título" required>
 
@@ -155,7 +155,7 @@
                     <input type="date" id="fecha" th:field="*{fecha}" readonly>
 
                     <div class="buttons">
-                        <button type="submit" formaction="/inicio">Guardar</button>
+                        <button type="submit">Guardar</button>
 
                     </div>
                 </form>

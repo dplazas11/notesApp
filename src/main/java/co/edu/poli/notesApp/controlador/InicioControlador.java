@@ -29,7 +29,7 @@ public class InicioControlador {
         return "listar"; // nombre del archivo HTML (listar.html)
     }
 
-    @PostMapping("/inicio")
+    @PostMapping("/guardar")
     public String guardarNota(@ModelAttribute("nota") Nota nota, Model model) {
         try {
             notaRepository.save(nota);
@@ -53,7 +53,7 @@ public class InicioControlador {
             model.addAttribute("error", "⚠️ No se encontró una nota con ese ID");
         }
         model.addAttribute("nota", new Nota());
-        return "verNota";
+        return "/verNota";
     }
 
     // 🔴 Eliminar nota con AJAX
